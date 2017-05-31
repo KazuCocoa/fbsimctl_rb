@@ -3,6 +3,8 @@ module FbsimctlRb
     attr_reader :fbsim
 
     def initialize
+      validate_env
+
       @fbsim = 'fbsimctl'
     end
 
@@ -17,6 +19,11 @@ module FbsimctlRb
         puts ste
         raise(sto)
       end
+    end
+
+    def validate_env
+      return unless `which fbsimctl`.empty?
+      raise "You should install fbsimctl. Read https://github.com/facebook/FBSimulatorControl/tree/master/fbsimctl"
     end
 
     protected
