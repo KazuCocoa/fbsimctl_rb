@@ -1,4 +1,4 @@
-module fbsimctl_rb
+module FbsimctlRb
   class Cmd
     attr_reader :fbsim
 
@@ -10,13 +10,21 @@ module fbsimctl_rb
 
     def run(*command)
       sto, _ste, status = Open3.capture3(command.join(' '))
-      status.success? sto : raise(stdo)
+      status.success? ? sto : raise(stdo)
     end
 
     protected
 
-    def method_missing(method, *args, &block)
-      run(%W(#{@fbsim_cmd} #{method}}) + *args)
+    def method_missing(method, *args, &_block)
+      if respond_to_missing?
+        run(%W(#{@fbsim_cmd} #{method}}) + args)
+      else
+        super
+      end
+    end
+
+    def respond_to_missing?
+      true
     end
   end
 end
