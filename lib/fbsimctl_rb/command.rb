@@ -9,15 +9,21 @@ module FbsimctlRb
     private
 
     def run(*command)
-      sto, _ste, status = Open3.capture3(command.join(' '))
-      status.success? ? sto : raise(stdo)
+      cmd = command.join(' ')
+      sto, ste, status = Open3.capture3(cmd)
+      if status.success?
+        sto
+      else
+        puts ste
+        raise(sto)
+      end
     end
 
     protected
 
     def method_missing(method, *args, &_block)
       if respond_to_missing?
-        run(%W(#{@fbsim_cmd} #{method}}) + args)
+        run(%W(#{@fbsim} #{method}) + args)
       else
         super
       end
