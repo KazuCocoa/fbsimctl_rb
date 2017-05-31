@@ -3,9 +3,7 @@ module FbsimctlRb
     attr_reader :fbsim
 
     def initialize
-      validate_env
-
-      @fbsim = 'fbsimctl'
+      @fbsim = get_fbsimctl_path
     end
 
     private
@@ -21,8 +19,9 @@ module FbsimctlRb
       end
     end
 
-    def validate_env
-      return unless `which fbsimctl`.empty?
+    def get_fbsimctl_path
+      cmd = `which fbsimctl`.strip
+      return cmd unless cmd.empty?
       raise "You should install fbsimctl. Read https://github.com/facebook/FBSimulatorControl/tree/master/fbsimctl"
     end
 
